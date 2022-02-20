@@ -36,7 +36,7 @@ def update_gist(github_token: str, gist_id: str, content: str):
     github_client = Github(github_token)
     gist = github_client.get_gist(gist_id)
     gist.edit(
-        "오늘의 메뉴 😀",
+        "『녹기 전에』 오늘의 메뉴 😀",
         files={
             "before-it-melts": InputFileContent(content)
         }
