@@ -1,4 +1,6 @@
 import os
+from typing import List
+import math
 import datetime
 import requests
 from github import Github, InputFileContent
@@ -10,9 +12,29 @@ GITHUB_TOKEN = os.environ.get("GH_TOKEN")
 GIST_ID = os.environ.get("GIST_ID")
 
 
-def update_gist(content: str):
-    github_client = Github(GITHUB_TOKEN)
-    gist = github_client.get_gist(GIST_ID)
+def gist_rest_day_formatter(contents: List[str]) -> str:
+    return "\n".join(contents)
+
+
+def gist_formatter(contents: List[str]) -> str:
+    footer = f"💡 [ {contents[3]} ]"
+    menu_list = contents[4:-2]
+    size = math.ceil(len(menu_list) / 4)
+
+    formatted_result = []
+
+    while menu_list:
+        formatted_result.append(" | ".join(menu_list[:size]))
+        menu_list = menu_list[size:]
+
+    formatted_result.append(footer)
+
+    return "\n".join(formatted_result)
+
+
+def update_gist(github_token: str, gist_id: str, content: str):
+    github_client = Github(github_token)
+    gist = github_client.get_gist(gist_id)
     gist.edit(
         "오늘의 메뉴 😀",
         files={
@@ -154,13 +176,13 @@ def get_ice_cream_type_from_color(block_color):
     return ice_cream_type
 
 
-def main():
+def get_menu_list():
     content_list = []
 
     now = datetime.datetime.now()
     if now.weekday() == 1:
         content_list.append("오늘은 쉬는날! \n아이스크림 얼리는 중... 🥶🥶🥶")
-        return content_list
+        return content_list, True
 
     get_cached_blocks()
     page = get_page()
@@ -182,20 +204,25 @@ def main():
         title = get_text_from_block(block)
         block_color = get_block_color_from_block(block)
         ice_cream_type_icon = get_ice_cream_type_from_color(block_color)
-        if ice_cream_type_icon:
-            content = f"{ice_cream_type_icon} {title}"
-        else:
-            content = f"{title}"
+        content = f"{ice_cream_type_icon}{title}"
 
         content_list.append(content)
 
-    return content_list
+    return content_list, False
 
 
-if __name__ == "__main__":
-    content_list = main()
+def main():
+    content_list, is_rest = get_menu_list()
     for content in content_list:
         print(content)
 
     if GITHUB_TOKEN and GIST_ID:
-        update_gist("\n".join(content_list))
+        if is_rest:
+            gist_content = gist_rest_day_formatter(content_list)
+        else:
+            gist_content = gist_formatter(content_list)
+        update_gist(GITHUB_TOKEN, GIST_ID, gist_content)
+
+
+if __name__ == "__main__":
+    main()
