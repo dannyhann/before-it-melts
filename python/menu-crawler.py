@@ -1,9 +1,24 @@
+import os
 import datetime
 import requests
+from github import Github, InputFileContent
 
 MENU_PAGE_BLOCK_ID = "b261c537-bf9a-4fa7-9a94-c3b8a79fa573"
 HOST_URL = "https://beforeitmelts.notion.site"
 BLOCKS = dict()
+GITHUB_TOKEN = os.environ.get("GH_TOKEN")
+GIST_ID = os.environ.get("GIST_ID")
+
+
+def update_gist(content: str):
+    github_client = Github(GITHUB_TOKEN)
+    gist = github_client.get_gist(GIST_ID)
+    gist.edit(
+        "오늘의 메뉴 😀",
+        files={
+            "before-it-melts": InputFileContent(content)
+        }
+    )
 
 
 def get_page():
@@ -156,7 +171,6 @@ def main():
 
     header_content = f"{title} {emoji}"
 
-    content_list.append(cover)
     content_list.append(header_content)
 
     for block_id in contents:
@@ -174,13 +188,14 @@ def main():
             content = f"{title}"
 
         content_list.append(content)
-    content_list.append(f"https://baeminn.me/DTFYhSJbn 를 이용하시면 웹에서 메뉴를 볼 수 있습니다.")
 
     return content_list
 
 
 if __name__ == "__main__":
     content_list = main()
-
     for content in content_list:
         print(content)
+
+    if GITHUB_TOKEN and GIST_ID:
+        update_gist("\n".join(content_list))
