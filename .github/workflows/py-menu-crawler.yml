@@ -19,4 +19,6 @@ jobs:
         run: |
           python -m pip install -r ./python/requirements.txt
           python ./python/menu-crawler.py
-        
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GIST_ID: ${{ secrets.GIST_ID }}
