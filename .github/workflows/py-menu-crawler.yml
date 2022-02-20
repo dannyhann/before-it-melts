@@ -1,0 +1,22 @@
+name: py-menu-crawler
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v2
+      - name: setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: execute py script
+        run: |
+          python -m pip install -f ./python/requirements.txt
+          python ./python/menu-crawler.py
+        
