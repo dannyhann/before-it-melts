@@ -12,3 +12,4 @@
 pined gist 형태로 출력하도록 하였습니다. 
 
 <img width="451" alt="스크린샷 2022-02-21 오후 3 13 37" src="https://user-images.githubusercontent.com/6360420/154899488-420409f7-6eae-43d5-b59c-cf7bbfe53362.png">
+<img width="451" alt="스크린샷 2022-02-22 오후 7 58 57" src="https://user-images.githubusercontent.com/6360420/155119326-2ca0525e-1c2f-42af-bb46-bfd230f68fb4.png">
