@@ -17,8 +17,8 @@ def gist_rest_day_formatter(contents: List[str]) -> str:
 
 
 def gist_formatter(contents: List[str]) -> str:
-    footer = f"💡 [ {contents[3]} ]"
-    menu_list = contents[4:-2]
+    footer = f"💡 [ {contents[6]} ]"
+    menu_list = contents[7:-2]
     size = math.ceil(len(menu_list) / 4)
 
     formatted_result = []
